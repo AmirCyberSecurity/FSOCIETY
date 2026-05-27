@@ -21,11 +21,11 @@ def main(page: ft.Page):
     }
 
     ICON_PATH = "logos/mr-robot-logo.jpg"
-    icon_element = ft.Container(content=ft.Image(src=ICON_PATH, width=200, height=200, fit=ft.ImageFit.CONTAIN))
+    icon_element = ft.Container(content=ft.Image(src=ICON_PATH, width=200, height=200, fit="contain"))
 
     
     url_entry = fsociety_input("Target URL", "https://")
-    size_entry = fsociety_input("Size (KB)", "10")
+    size_entry = fsociety_input("Size (KB)", "100")
     ip_entry = fsociety_input("Target IP")
     number_entry = fsociety_input("Target Number")
     host_entry = fsociety_input("Target Host")
@@ -41,8 +41,13 @@ def main(page: ft.Page):
         status_label = ft.Text("Ready", color="#00FF00", font_family="JetMedium", size=14)
         terminal_view = ft.ListView(expand=True, spacing=2, auto_scroll=True)
         terminal_container = ft.Container(
-            content=terminal_view, border=ft.border.all(1, "#FF0000"),
-            border_radius=5, padding=10, bgcolor="#151515", height=150, width=350
+        content=terminal_view, border=ft.Border(
+            top=ft.border.BorderSide(1, "#FF0000"),
+            right=ft.border.BorderSide(1, "#FF0000"),
+            bottom=ft.border.BorderSide(1, "#FF0000"),
+            left=ft.border.BorderSide(1, "#FF0000")
+        ),
+            border_radius=5, padding=10, bgcolor="#151515", height=150, width=300
         )
 
         def on_update(total, fake_ip, status):
@@ -99,7 +104,7 @@ def main(page: ft.Page):
             stop_ddos()
             show_main_ui()
 
-        btn_start = ft.ElevatedButton(
+        btn_start = ft.FilledButton(
             content=ft.Text("INITIALIZE", color="white", font_family="JetMedium"),
             width=222, height=44, bgcolor="#FF0000",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
@@ -193,7 +198,7 @@ def main(page: ft.Page):
                         ip_entry,
                         error_label,
                         ft.Container(height=5),
-                        ft.ElevatedButton(
+                        ft.FilledButton(
                             content=ft.Text("INFO", color="white", font_family="JetMedium"),
                             width=222, height=44, bgcolor="#FF0000",
                             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
@@ -299,7 +304,7 @@ def main(page: ft.Page):
                         number_entry,
                         error_label,
                         ft.Container(height=5),
-                        ft.ElevatedButton(
+                        ft.FilledButton(
                             content=ft.Text("INFO", color="white", font_family="JetMedium"),
                             width=222, height=44, bgcolor="#FF0000",
                             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
@@ -382,7 +387,7 @@ def main(page: ft.Page):
                         host_entry,
                         error_label,
                         ft.Container(height=5),
-                        ft.ElevatedButton(
+                        ft.FilledButton(
                             content=ft.Text("INFO", color="white", font_family="JetMedium"),
                             width=222, height=44, bgcolor="#FF0000",
                             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
@@ -413,21 +418,21 @@ def main(page: ft.Page):
                     ft.Container(height=20),
                     ft.Text("Osint By?", font_family="JetMedium", size=15, color="white"),
                     ft.Container(height=20),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("By IP", color="white", font_family="JetMedium"),
                         width=222, height=44, bgcolor="#FF0000",
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: osint_by_ip()
                     ),
                     ft.Container(height=5),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("By Number", color="white", font_family="JetMedium"),
                         width=222, height=44, bgcolor="#FF0000",
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: osint_by_number()
                     ),
                     ft.Container(height=5),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("By Host", color="white", font_family="JetMedium"),
                         width=222, height=44, bgcolor="#FF0000",
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
@@ -455,19 +460,19 @@ def main(page: ft.Page):
         page.add(
             ft.Column(
                 [
-                    ft.Container(height=100),
+                    ft.Container(height=150),
                     ft.Text("FSOCIETY", font_family="MrRobot", size=30, color="#FF0000"),
                     ft.Text("CONNECTION ESTABLISHED", font_family="JetMedium", size=12, color="#00FF00"),
                     ft.Container(height=20),
                     ft.Text("For educational purposes only.", font_family="JetMedium", size=14, color="white"),
                     ft.Container(height=30),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("Website DDoS", font_family="JetMedium", size=15, color="white"),
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: show_dos_ui()
                     ),
                     ft.Container(height=5),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("Powerful Osint", font_family="JetMedium", size=15, color="white"),
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: show_choice_ui()
@@ -490,7 +495,7 @@ def main(page: ft.Page):
                     ft.Text("ERROR: REMOTE_HOST_UNREACHABLE", font_family="JetMedium", size=13, color="#FF0000"),
                     ft.Text("System is offline. Encryption failed.", font_family="JetLight", size=12, color="#FF0000"),
                     ft.Container(height=30),
-                    ft.ElevatedButton(
+                    ft.FilledButton(
                         content=ft.Text("RE-ESTABLISH UPLINK", font_family="JetMedium", color="white", size=15),
                         on_click=lambda _: check_and_update(),
                         style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
@@ -514,4 +519,4 @@ def main(page: ft.Page):
 
     check_and_update()
 
-ft.app(target=main, assets_dir="assets")
+ft.run(main, assets_dir="assets")
