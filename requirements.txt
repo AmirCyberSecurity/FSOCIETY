@@ -2,5 +2,3 @@ flet==0.84.0
 aiohttp
 requests
 phonenumbers
-dnspython
-beautifulsoup4
