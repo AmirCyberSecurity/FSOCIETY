@@ -1,0 +1,22 @@
+[project]
+name = "FSOCIETY - App"
+version = "1.0.0"
+dependencies = [
+    "flet==0.84.0",
+    "requests",
+    "phonenumbers",
+    "aiohttp"
+]
+
+[tool.flet]
+product = "FSOCIETY"
+artifact = "FSOCIETY"
+icon = "assets/logos/fsociety.png"
+package = "com.fsociety.app"
+
+[tool.flet.app]
+module = "fsociety"
+
+[tool.flet.android]
+min_sdk_version = 31
+target_sdk_version = 35
