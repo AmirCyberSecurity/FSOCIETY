@@ -98,3 +98,39 @@ def get_ip_host_data(ip) -> dict:
 
     except:
         return result
+
+COMMON_PORTS = {
+    21: "FTP",
+    22: "SSH",
+    25: "SMTP",
+    53: "DNS",
+    80: "HTTP",
+    110: "POP3",
+    143: "IMAP",
+    443: "HTTPS",
+    3306: "MySQL",
+    5432: "PostgreSQL",
+    6379: "Redis",
+    8080: "HTTP-ALT"
+}
+
+def scan_ports(host, ports=None, timeout=0.1):
+    if ports is None:
+        ports = COMMON_PORTS.keys()
+
+    opened = []
+
+    for port in ports:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(timeout)
+
+            if s.connect_ex((host, port)) == 0:
+                opened.append(str(port))
+
+            s.close()
+
+        except:
+            pass
+
+    return ", ".join(opened)
