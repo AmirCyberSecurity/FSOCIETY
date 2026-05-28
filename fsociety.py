@@ -1,5 +1,5 @@
 from lib.ip_osint import checking, get_ip, get_country, get_city, get_isp, get_org, get_cords, get_ip_type
-from lib.host_osint import site_exists, safe_get_ip, detect_protection, get_ip_host_data
+from lib.host_osint import site_exists, safe_get_ip, detect_protection, get_ip_host_data, scan_ports
 from lib.phone_osint import is_valid, parse_check, get_data
 from lib.ddos import start_ddos, stop_ddos, is_ddos_running
 from lib.connectivity import check_connectivity
@@ -31,7 +31,7 @@ def main(page: ft.Page):
     host_entry = fsociety_input("Target Host")
 
 
-    def show_dos_ui():
+    def show_ddos_ui():
         page.clean()
         if is_ddos_running():
             asyncio.create_task(stop_ddos())
@@ -97,7 +97,7 @@ def main(page: ft.Page):
             status_label.color = "#FF0000"
             error_label.value = ""
             page.update()
-
+            
             await start_ddos(target, kb_val, 500, on_update, on_stats)
 
         def stop_process(e):
@@ -357,7 +357,9 @@ def main(page: ft.Page):
                                 ft.Text(f"City: {get_ip_host_data(target_ip)['city']}", size=13, font_family="JetMedium", color="#FF0000"),
                                 ft.Text(f"ORG: {get_ip_host_data(target_ip)['org']}", size=13, font_family="JetMedium", color="#FF0000"),
                                 ft.Text(f"ISP: {get_ip_host_data(target_ip)['isp']}", size=13, font_family="JetMedium", color="#FF0000"),
+                                ft.Text(f"Opened Ports: {scan_ports(host)}", size=13, font_family="JetMedium", color="#FF0000"),
                                 ft.Text(get_cords(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+
                                 
                                 ft.Container(height=15),
                                 ft.TextButton(
@@ -469,7 +471,7 @@ def main(page: ft.Page):
                     ft.FilledButton(
                         content=ft.Text("Website DDoS", font_family="JetMedium", size=15, color="white"),
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
-                        on_click=lambda _: show_dos_ui()
+                        on_click=lambda _: show_ddos_ui()
                     ),
                     ft.Container(height=5),
                     ft.FilledButton(
