@@ -7,6 +7,9 @@ from ui.inputs import fsociety_input
 import phonenumbers
 import flet as ft
 import asyncio
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def main(page: ft.Page):
     page.title = "Fsociety - HACK"
