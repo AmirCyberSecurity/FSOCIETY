@@ -41,7 +41,7 @@ async def _worker(worker_id, target, kb_size, on_update):
     try:
         while _is_running:
             try:
-                fake_ip = f"{random.choice([5, 31, 37, 77, 80, 81, 82, 85, 87, 88, 89, 91, 93, 94, 95, 109, 147, 158, 176, 178, 185, 188, 193, 194, 212, 213, 217])}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
+                fake_ip = f"{random.choice([5, 31, 37, 77, 80, 81, 82, 85, 87, 88, 89, 91, 93, 94, 95, 109, 147, 158, 176, 178, 185, 188, 193, 194, 212, 213, 217])}.{random.randint(0,254)}.{random.randint(0,254)}.{random.randint(0,254)}"
                 headers = {
                     "User-Agent": random.choice(USER_AGENTS),
                     "X-Real-IP": fake_ip,
