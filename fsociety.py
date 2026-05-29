@@ -3,6 +3,7 @@ from lib.host_osint import site_exists, safe_get_ip, detect_protection, get_ip_h
 from lib.phone_osint import is_valid, parse_check, get_data
 from lib.ddos import start_ddos, stop_ddos, is_ddos_running
 from lib.connectivity import check_connectivity
+from lib.username_osint import check
 from ui.inputs import fsociety_input
 import phonenumbers
 import flet as ft
@@ -32,7 +33,7 @@ def main(page: ft.Page):
     ip_entry = fsociety_input("Target IP")
     number_entry = fsociety_input("Target Number")
     host_entry = fsociety_input("Target Host")
-
+    username_entry = fsociety_input("Target Username")
 
     def show_ddos_ui():
         page.clean()
@@ -199,6 +200,7 @@ def main(page: ft.Page):
                         ft.Text("Info About IP", font_family="JetMedium", size=15, color="white"),
                         ft.Container(height=25),
                         ip_entry,
+                        ft.Container(height=5),
                         error_label,
                         ft.Container(height=5),
                         ft.FilledButton(
@@ -261,27 +263,28 @@ def main(page: ft.Page):
                     return
                 
                 parsed = phonenumbers.parse(clean)
+                data = get_data(parsed)
 
                 page.clean()
                 page.add(
                     ft.Column(
                         [
-                            ft.Container(height=50),
+                            ft.Container(height=75),
                             ft.Text("Number Info", font_family="MrRobot", color="#FF0000", size=25),
                             ft.Container(height=20),
                             ft.Text("Results:", font_family="JetMedium", size=16, color="white"),
                             ft.Container(height=20),
-                            ft.Text(f"COUNTRY: {get_data(parsed)['country']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"REGION: {get_data(parsed)['region']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"OPERATOR: {get_data(parsed)['operator']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"TIMEZONE: {get_data(parsed)['tz']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"LINE_TYPE: {get_data(parsed)['line_type']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"COUNTRY CODE: {get_data(parsed)['country_code']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"INTERNATIONAL: {get_data(parsed)['intl']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"E164: {get_data(parsed)['e164']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"LOCAL: {get_data(parsed)['e164']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"VALID: {get_data(parsed)['is_valid']}", color="#FF0000", font_family="JetLight", size=12),
-                            ft.Text(f"POSSIBLE: {get_data(parsed)['is_possible']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"COUNTRY: {data['country']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"REGION: {data['region']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"OPERATOR: {data['operator']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"TIMEZONE: {data['tz']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"LINE_TYPE: {data['line_type']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"COUNTRY CODE: {data['country_code']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"INTERNATIONAL: {data['intl']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"E164: {data['e164']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"LOCAL: {data['local']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"VALID: {data['is_valid']}", color="#FF0000", font_family="JetLight", size=12),
+                            ft.Text(f"POSSIBLE: {data['is_possible']}", color="#FF0000", font_family="JetLight", size=12),
                             ft.Container(height=15),
                             ft.TextButton(
                                 content=ft.Text("EXIT", color="white", font_family="JetMedium"),
@@ -305,6 +308,7 @@ def main(page: ft.Page):
                         ft.Text("Info About Number", font_family="JetMedium", size=15, color="white"),
                         ft.Container(height=25),
                         number_entry,
+                        ft.Container(height=5),
                         error_label,
                         ft.Container(height=5),
                         ft.FilledButton(
@@ -337,49 +341,61 @@ def main(page: ft.Page):
                     error_label.value = "NULL_TARGET"
                     page.update()
                     return
-                
-                if site_exists(host_entry.value):
-                    page.clean()
 
-                    host = host_entry.value
+                host = host_entry.value.strip()
 
-                    ip = safe_get_ip(host)
-                    protection = detect_protection(host)
-                    target_ip = ip
-                    page.add(
-                        ft.Column(
-                            [
-                                ft.Container(height=100),
-                                ft.Text("Host Info", font_family="MrRobot", size=25, color="#FF0000"),
-                                ft.Container(height=20),
-                                ft.Text("Results:", font_family="JetMedium", color="white", size=15),
-                                ft.Container(height=30),
-                                ft.Text(f"Ip: {ip}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"Protection: {protection}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"Country: {get_ip_host_data(target_ip)['country']}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"City: {get_ip_host_data(target_ip)['city']}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"ORG: {get_ip_host_data(target_ip)['org']}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"ISP: {get_ip_host_data(target_ip)['isp']}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(f"Opened Ports: {scan_ports(host)}", size=13, font_family="JetMedium", color="#FF0000"),
-                                ft.Text(get_cords(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+                if host.startswith("http://"):
+                    host = host[7:]
+                elif host.startswith("https://"):
+                    host = host[8:]
 
-                                
-                                ft.Container(height=15),
-                                ft.TextButton(
-                                    content=ft.Text("EXIT", color="white", font_family="JetMedium"),
-                                    on_click=lambda _: show_choice_ui(),
-                                    style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
-                                    width=200, height=40
-                                )
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                            scroll=ft.ScrollMode.AUTO
-                        )
-                    )
-                else:
+                if not site_exists(host):
                     error_label.value = "NOT_FOUND"
                     page.update()
+                    return
+
+                ip = safe_get_ip(host)
+                protection = detect_protection(host)
+                target_ip = ip
+
+                host_data = get_ip_host_data(target_ip)
+
+                page.clean()
+                page.add(
+                    ft.Column(
+                        [
+                            ft.Container(height=100),
+                            ft.Text("Host Info", font_family="MrRobot", size=25, color="#FF0000"),
+                            ft.Container(height=20),
+                            ft.Text("Results:", font_family="JetMedium", color="white", size=15),
+                            ft.Container(height=30),
+
+                            ft.Text(f"Ip: {ip}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"Protection: {protection}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"Country: {host_data['country']}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"City: {host_data['city']}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"ORG: {host_data['org']}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"ISP: {host_data['isp']}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(f"Opened Ports: {scan_ports(host)}", size=13, font_family="JetMedium", color="#FF0000"),
+                            ft.Text(get_cords(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+
+                            ft.Container(height=15),
+                            ft.TextButton(
+                                content=ft.Text("EXIT", color="white", font_family="JetMedium"),
+                                on_click=lambda _: show_choice_ui(),
+                                style=ft.ButtonStyle(
+                                    bgcolor="#FF0000",
+                                    shape=ft.RoundedRectangleBorder(radius=5)
+                                ),
+                                width=200,
+                                height=40
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=ft.ScrollMode.AUTO
+                    )
+                )
 
             page.add(
                 ft.Column(
@@ -390,6 +406,7 @@ def main(page: ft.Page):
                         ft.Text("Info About Host", font_family="JetMedium", color="white", size=15),
                         ft.Container(height=25),
                         host_entry,
+                        ft.Container(height=5),
                         error_label,
                         ft.Container(height=5),
                         ft.FilledButton(
@@ -412,7 +429,109 @@ def main(page: ft.Page):
                 )
             )
 
+        def osint_by_username():
 
+            def final_osint_by_username(_):
+                if not username_entry.value:
+                    error_label.value = "NULL_TARGET"
+                    page.update()
+                    return
+                
+                if len(username_entry.value) < 3:
+                    error_label.value = "USERNAME_TOO_SHORT"
+                    page.update()
+                    return
+                
+                if len(username_entry.value) > 20:
+                    error_label.value = "USERNAME_TOO_LONG"
+                    page.update()
+                    return
+                
+
+                if " " in username_entry.value:
+                    error_label.value = "USERNAME_NO_SPACES"
+                    page.update()
+                    return
+                
+                if username_entry.value.isdigit():
+                    error_label.value = "USERNAME_NO_ONLY_NUMBERS"
+                    page.update()
+                    return
+                
+                if username_entry.value.startswith("@"):
+                    username_entry.value = username_entry.value[1:]
+
+                if username_entry.value.startswith(" "):
+                    username_entry.value = username_entry.value.strip()
+
+                username = username_entry.value
+                data = check(username)
+
+                page.clean()
+                page.add(
+                    ft.Column(
+                        [
+                            ft.Container(height=100),
+                            ft.Text("Username Info", font_family="MrRobot", color="#FF0000", size=25),
+                            ft.Container(height=20),
+                            ft.Text("Results:", font_family="JetMedium", size=16, color="white"),
+                            ft.Container(height=30),
+                            ft.Text(f"Instagram: {data['instagram']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Facebook: {data['facebook']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Pinterest: {data['pinterest']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Tiktok: {data['tiktok']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Telegram: {data['telegram']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Github: {data['github']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"VK: {data['vk']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"Steam: {data['steam']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Text(f"YouTube: {data['youtube']}", font_family="JetLight", size=12, color="#FF0000"),
+                            ft.Container(height=15),
+                            ft.TextButton(
+                                content=ft.Text("EXIT", color="white", font_family="JetMedium"),
+                                on_click=lambda _: show_choice_ui(),
+                                style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
+                                width=200, height=40
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=ft.ScrollMode.AUTO
+                    )
+                )
+                            
+
+            page.clean()
+            error_label = ft.Text("", color="#FF0000", font_family="JetMedium", size=13)
+            page.add(
+                ft.Column(
+                    [
+                        ft.Container(height=100),
+                        ft.Text("Osint By Username", font_family="MrRobot", color="#FF0000", size=25),
+                        ft.Container(height=20),
+                        ft.Text("Check Usernames Sites", font_family="JetMedium", color="white", size=15),
+                        ft.Container(height=30),
+                        username_entry,
+                        error_label,
+                        ft.Container(height=5),
+                        ft.FilledButton(
+                            content=ft.Text("INFO", color="white", font_family="JetMedium"),
+                            width=222, height=44, bgcolor="#FF0000",
+                            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
+                            on_click=final_osint_by_username   
+                        ),
+                        ft.Container(height=10),
+                        ft.TextButton(
+                            content=ft.Text("EXIT", color="white", font_family="JetMedium"),
+                            on_click=lambda _: show_choice_ui(),
+                            style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
+                            width=200, height=40
+                        )
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    scroll=ft.ScrollMode.AUTO
+                )
+            )
         
 
         page.add(    
@@ -444,6 +563,12 @@ def main(page: ft.Page):
                         on_click=lambda _: osint_by_host()
                     ),
                     ft.Container(height=5),
+                    ft.FilledButton(
+                        content=ft.Text("By Username", color="white", font_family="JetMedium"),
+                        width=222, height=44, bgcolor="#FF0000",
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
+                        on_click=lambda _: osint_by_username()
+                    ),
                     ft.Container(height=20),
                     ft.TextButton(
                         content=ft.Text("EXIT", color="white", font_family="JetMedium"),
