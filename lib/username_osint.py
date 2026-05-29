@@ -1,4 +1,5 @@
 import requests
+from concurrent.futures import ThreadPoolExecutor
 
 urls = {
     "instagram": "https://www.instagram.com/{}/",
@@ -12,7 +13,24 @@ urls = {
     "youtube": "https://www.youtube.com/@{}",
 }
 
-HEADERS = {"User-Agent": "Mozilla/5.0"}
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+}
+
+BAD_SIGNS = {
+    "instagram": ["sorry, this page isn't available", "page not found"],
+    "facebook": ["this content isn't available", "content isn't available", "page isn't available"],
+    "tiktok": ["couldn't find this account", "no longer available"],
+    "telegram": ["if you have telegram", "view in telegram", "not found"],
+    "github": ["not found", "doesn’t exist"],
+    "vk": ["page not found", "deleted"],
+    "steam": ["the specified profile could not be found"],
+    "youtube": ["this channel doesn't exist", "not found"],
+    "pinterest": ["page not found"],
+}
+
+session = requests.Session()
+session.headers.update(HEADERS)
 
 
 def short_path(url: str) -> str:
@@ -21,25 +39,42 @@ def short_path(url: str) -> str:
     return url.strip("/")
 
 
+def _check_site(site: str, username: str):
+    url = urls[site].format(username)
+
+    try:
+        r = session.get(url, timeout=2, allow_redirects=True)
+        text = (r.text or "").lower()
+        final_url = r.url
+
+        if r.status_code != 200:
+            return site, "Not Exists"
+
+        for bad in BAD_SIGNS.get(site, []):
+            if bad in text:
+                return site, "Not Exists"
+
+        if "login" in final_url and site in ["instagram", "facebook"]:
+            return site, "Not Exists"
+
+        return site, short_path(final_url)
+
+    except:
+        return site, "Not Exists"
+
+
 def check(username: str) -> dict:
     result = {}
 
-    for site, url in urls.items():
-        try:
-            r = requests.get(
-                url.format(username),
-                headers=HEADERS,
-                timeout=1,
-                allow_redirects=True
-            )
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = [
+            executor.submit(_check_site, site, username)
+            for site in urls.keys()
+        ]
 
-            if r.status_code == 200:
-                result[site] = short_path(r.url)
-            else:
-                result[site] = "Not Exists"
-
-        except:
-            result[site] = "Not Exists"
+        for f in futures:
+            site, value = f.result()
+            result[site] = value
 
     return result
 
