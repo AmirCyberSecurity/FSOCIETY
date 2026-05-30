@@ -479,7 +479,6 @@ def main(page: ft.Page):
                             ft.Text(f"Instagram: {data['instagram']}", font_family="JetLight", size=12, color="#FF0000"),
                             ft.Text(f"Facebook: {data['facebook']}", font_family="JetLight", size=12, color="#FF0000"),
                             ft.Text(f"Pinterest: {data['pinterest']}", font_family="JetLight", size=12, color="#FF0000"),
-                            ft.Text(f"Tiktok: {data['tiktok']}", font_family="JetLight", size=12, color="#FF0000"),
                             ft.Text(f"Telegram: {data['telegram']}", font_family="JetLight", size=12, color="#FF0000"),
                             ft.Text(f"Github: {data['github']}", font_family="JetLight", size=12, color="#FF0000"),
                             ft.Text(f"VK: {data['vk']}", font_family="JetLight", size=12, color="#FF0000"),
