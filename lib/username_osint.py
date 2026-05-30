@@ -5,7 +5,6 @@ urls = {
     "instagram": "https://www.instagram.com/{}/",
     "facebook": "https://www.facebook.com/{}",
     "pinterest": "https://www.pinterest.com/{}/",
-    "tiktok": "https://www.tiktok.com/@{}",
     "telegram": "https://t.me/{}",
     "github": "https://github.com/{}",
     "vk": "https://vk.com/{}",
