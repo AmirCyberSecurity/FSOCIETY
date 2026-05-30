@@ -591,8 +591,9 @@ def main(page: ft.Page):
                 [
                     ft.Container(height=150),
                     ft.Text("FSOCIETY", font_family="MrRobot", size=30, color="#FF0000"),
-                    ft.Text("CONNECTION ESTABLISHED", font_family="JetMedium", size=12, color="#00FF00"),
-                    ft.Container(height=20),
+                    ft.Container(height=15),
+                    ft.Text(spans=[ft.TextSpan(text="Visit Author's GitHub", url="https://github.com/AmirCyberSecurity", style=ft.TextStyle(font_family="JetMedium", size=12, color="#00FF00", decoration=ft.TextDecoration.UNDERLINE, decoration_color="#00FF00",))]),
+                    ft.Container(height=5),
                     ft.Text("For educational purposes only.", font_family="JetMedium", size=14, color="white"),
                     ft.Container(height=30),
                     ft.FilledButton(
