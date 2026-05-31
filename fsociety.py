@@ -122,7 +122,7 @@ def main(page: ft.Page):
                     ft.Text("Website DDoS", font_family="MrRobot", size=25, color="#FF0000"),
                     ft.Container(height=10),
                     ft.Text("CUSTOM_FLOODER", font_family="JetMedium", size=14, color="white"),
-                    ft.Container(height=10),
+                    ft.Divider(color="#333333"),
                     url_entry,
                     ft.Container(height=10),
                     size_entry,
@@ -131,6 +131,7 @@ def main(page: ft.Page):
                     btn_start,
                     ft.Container(height=5),
                     terminal_container,
+                    ft.Divider(color="#333333"),
                     ft.Container(height=5),
                     ft.TextButton(
                         content=ft.Text("TERMINATE & EXIT", color="white", font_family="JetMedium"),
@@ -539,7 +540,8 @@ def main(page: ft.Page):
                     ft.Text("Choice", font_family="MrRobot", color="#FF0000", size=27),
                     ft.Container(height=20),
                     ft.Text("Osint By?", font_family="JetMedium", size=15, color="white"),
-                    ft.Container(height=20),
+                    ft.Container(height=10),
+                    ft.Divider(color="#333333"),
                     ft.FilledButton(
                         content=ft.Text("By IP", color="white", font_family="JetMedium"),
                         width=222, height=44, bgcolor="#FF0000",
@@ -567,7 +569,8 @@ def main(page: ft.Page):
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: osint_by_username()
                     ),
-                    ft.Container(height=20),
+                    ft.Divider(color="#333333"),
+                    ft.Container(height=10),
                     ft.TextButton(
                         content=ft.Text("EXIT", color="white", font_family="JetMedium"),
                         on_click=lambda _: show_main_ui(),
@@ -723,6 +726,8 @@ def main(page: ft.Page):
                     ft.Container(height=100),
                     ft.Text("CONNECTION_TERMINATED", font_family="MrRobot", size=20, color="#FF0000"),
                     ft.Container(height=20),
+                    ft.Divider(color="#333333"),
+                    ft.Container(height=10),
                     ft.Text("ERROR: REMOTE_HOST_UNREACHABLE", font_family="JetMedium", size=13, color="#FF0000"),
                     ft.Text("System is offline. Encryption failed.", font_family="JetLight", size=12, color="#FF0000"),
                     ft.Container(height=30),
@@ -732,6 +737,8 @@ def main(page: ft.Page):
                         style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
                         width=222, height=44
                     ),
+                    ft.Container(height=10),
+                    ft.Divider(color="#333333"),
                     ft.Container(height=20),
                     icon_element
                 ],
