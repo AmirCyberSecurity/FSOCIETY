@@ -688,7 +688,8 @@ def main(page: ft.Page):
                     ft.Text(spans=[ft.TextSpan(text="Visit Author's GitHub", url="https://github.com/AmirCyberSecurity", style=ft.TextStyle(font_family="JetMedium", size=12, color="#00FF00", decoration=ft.TextDecoration.UNDERLINE, decoration_color="#00FF00",))]),
                     ft.Container(height=5),
                     ft.Text("For educational purposes only.", font_family="JetMedium", size=14, color="white"),
-                    ft.Container(height=30),
+                    ft.Container(height=5),
+                    ft.Divider(color="#333333"),
                     ft.FilledButton(
                         content=ft.Text("Website DDoS", font_family="JetMedium", size=15, color="white"),
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
@@ -700,6 +701,7 @@ def main(page: ft.Page):
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: show_choice_ui()
                     ),
+                    ft.Divider(color="#333333"),
                     ft.Container(height=5),
                     ft.FilledButton(
                         content=ft.Text("About Us", font_family="JetMedium", size=15, color="white"),
