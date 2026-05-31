@@ -428,7 +428,6 @@ def main(page: ft.Page):
                     scroll=ft.ScrollMode.AUTO
                 )
             )
-
         def osint_by_username():
 
             def final_osint_by_username(_):
@@ -582,6 +581,100 @@ def main(page: ft.Page):
             )
         )
 
+    def show_about_ui():
+        page.clean()
+        page.add(
+            ft.Column(
+                [
+                    ft.Container(height=100),
+
+                    ft.Text(
+                        "FSOCIETY",
+                        font_family="MrRobot",
+                        size=28,
+                        color="#FF0000",
+                    ),
+
+                    ft.Text(
+                        "Version 1.0",
+                        font_family="JetMedium",
+                        size=12,
+                        color="#888888",
+                    ),
+
+                    ft.Container(height=10),
+
+                    ft.Text(
+                        spans=[
+                            ft.TextSpan(
+                                text="GitHub Profile",
+                                url="https://github.com/AmirCyberSecurity",
+                                style=ft.TextStyle(
+                                    font_family="JetMedium",
+                                    size=13,
+                                    color="#00FF00",
+                                    decoration=ft.TextDecoration.UNDERLINE,
+                                ),
+                            )
+                        ]
+                    ),
+
+                    ft.Container(height=25),
+
+                    ft.Divider(color="#333333"),
+
+                    ft.Container(height=10),
+
+                    ft.Text(
+                        "Features",
+                        font_family="JetMedium",
+                        size=16,
+                        color="#FF0000",
+                    ),
+
+                    ft.Text(
+                        "• OSINT By IP\n"
+                        "• OSINT By Host\n"
+                        "• OSINT By Username\n"
+                        "• OSINT By Phone Number\n"
+                        "• DDoS Attack Tool\n",
+                        font_family="JetMedium",
+                        size=13,
+                        color="white",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+
+                    ft.Divider(color="#333333"),
+
+                    ft.Text(
+                        "This software is intended for\neducational and research purposes.",
+                        font_family="JetMedium",
+                        size=12,
+                        color="#AAAAAA",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+
+                    ft.Container(height=25),
+                    ft.TextButton(
+                        content=ft.Text(
+                            "BACK",
+                            color="white",
+                            font_family="JetMedium"
+                        ),
+                        on_click=lambda _: show_main_ui(),
+                        style=ft.ButtonStyle(
+                            bgcolor="#FF0000",
+                            shape=ft.RoundedRectangleBorder(radius=8),
+                        ),
+                        width=220,
+                        height=42,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            )
+        )
+
     def show_main_ui():
         if is_ddos_running():
             asyncio.create_task(stop_ddos())
@@ -606,6 +699,12 @@ def main(page: ft.Page):
                         content=ft.Text("Powerful Osint", font_family="JetMedium", size=15, color="white"),
                         width=222, height=44, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
                         on_click=lambda _: show_choice_ui()
+                    ),
+                    ft.Container(height=5),
+                    ft.FilledButton(
+                        content=ft.Text("About Us", font_family="JetMedium", size=15, color="white"),
+                        width=200, height=40, style=ft.ButtonStyle(bgcolor="#FF0000", shape=ft.RoundedRectangleBorder(radius=5)),
+                        on_click=lambda _: show_about_ui()
                     )
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
