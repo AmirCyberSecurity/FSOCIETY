@@ -43,14 +43,5 @@ def fsociety_input(
 
         text_align=ft.TextAlign.CENTER,
     )
-
-    return ft.Container(
-        content=field,
-        width=width,
-        border_radius=8,
-        shadow=ft.BoxShadow(
-            blur_radius=8,
-            spread_radius=0,
-            color="#0000001F",
-        ),
-    )
+    
+    return field
