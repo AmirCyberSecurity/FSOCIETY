@@ -18,7 +18,7 @@ requests
 phonenumbers
 ```
 <p align="center">
-  <img src="./image.png" width="90%">
+  <img src="./image.png" width="100%">
 </p>
 
 **FSOCIETY** - Educational project
