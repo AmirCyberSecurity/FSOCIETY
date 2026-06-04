@@ -4,11 +4,28 @@ Educational cybersecurity application built with Python and Flet. Desktop and An
 
 For educational purposes only. Author not responsible for misuse.
 
+## Installation
+
 ```bash
 pip install -r requirements.txt
 ```
 
+## Run
+
+```bash
 python fsociety.py
+```
+
+## Quick Start
+
+Too lazy to remember two commands?
+
+```bash
+python launch.py
+```
+
+It installs dependencies and launches the application automatically.
+
 
 ## requirements.txt
 ```bash
