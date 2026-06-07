@@ -1,4 +1,4 @@
-from lib.ip_osint import checking, get_ip, get_country, get_city, get_isp, get_org, get_cords, get_ip_type
+from lib.ip_osint import checking, get_asname, get_ip, get_country, get_city, get_isp, get_org, get_cords, get_ip_type, get_asname, get_mobile, get_proxy, get_hosting
 from lib.host_osint import site_exists, safe_get_ip, detect_protection, get_ip_host_data, scan_ports
 from lib.phone_osint import is_valid, parse_check, get_data
 from lib.ddos import start_ddos, stop_ddos, is_ddos_running
@@ -163,7 +163,7 @@ def main(page: ft.Page):
                     page.add(
                         ft.Column(
                             [
-                                ft.Container(height=100),
+                                ft.Container(height=75),
                                 ft.Text("IP Info", color="#FF0000", font_family="MrRobot", size=26),
                                 ft.Container(height=20),
                                 ft.Text("Results:", color="#FF0000", font_family="JetMedium", size=16),
@@ -175,6 +175,10 @@ def main(page: ft.Page):
                                 ft.Text(get_org(target_ip), font_family="JetLight", size=13, color="#FF0000"),
                                 ft.Text(get_cords(target_ip), font_family="JetLight", size=13, color="#FF0000"),
                                 ft.Text(get_ip_type(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+                                ft.Text(get_asname(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+                                ft.Text(get_mobile(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+                                ft.Text(get_proxy(target_ip), font_family="JetLight", size=13, color="#FF0000"),
+                                ft.Text(get_hosting(target_ip), font_family="JetLight", size=13, color="#FF0000"),
                                 ft.Container(height=15),
                                 ft.TextButton(
                                     content=ft.Text("EXIT", color="white", font_family="JetMedium"),
@@ -531,7 +535,6 @@ def main(page: ft.Page):
                     scroll=ft.ScrollMode.AUTO
                 )
             )
-        
 
         page.add(    
                 ft.Column(
