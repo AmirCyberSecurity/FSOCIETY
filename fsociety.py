@@ -442,23 +442,23 @@ def main(page: ft.Page):
                     return
                 
                 if len(username_entry.value) < 3:
-                    error_label.value = "USERNAME_TOO_SHORT"
+                    error_label.value = "TOO_SHORT"
                     page.update()
                     return
                 
                 if len(username_entry.value) > 20:
-                    error_label.value = "USERNAME_TOO_LONG"
+                    error_label.value = "TOO_LONG"
                     page.update()
                     return
                 
 
                 if " " in username_entry.value:
-                    error_label.value = "USERNAME_NO_SPACES"
+                    error_label.value = "NO_SPACES"
                     page.update()
                     return
                 
                 if username_entry.value.isdigit():
-                    error_label.value = "USERNAME_NO_ONLY_NUMBERS"
+                    error_label.value = "NO_ONLY_NUMBERS"
                     page.update()
                     return
                 
