@@ -1,39 +1,33 @@
 import socket
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-_TIMEOUT = 0.08
+TIMEOUT = 1.0
 
-_TARGETS = (
-    ("127.0.0.1", 9050),      
-    ("127.0.0.1", 9150),      
+TARGETS = [
+    ("1.1.1.1", 443),
+    ("8.8.8.8", 443),       
+    ("google.com", 443),
+    ("cloudflare.com", 443),
+    ("github.com", 443),
+    ("microsoft.com", 443),
+    ("amazon.com", 443),
+]
 
-    ("1.1.1.1", 53),          
-    ("8.8.8.8", 53),          
-    ("9.9.9.9", 53),          
-    ("208.67.222.222", 53)
-)
 
-
-def _probe(target):
+def probe(host, port):
     try:
-        with socket.create_connection(target, _TIMEOUT):
+        with socket.create_connection((host, port), TIMEOUT):
             return True
     except OSError:
         return False
 
 
-def check_connectivity() -> bool:
-    executor = ThreadPoolExecutor(max_workers=len(_TARGETS))
-
-    try:
-        futures = [executor.submit(_probe, target) for target in _TARGETS]
+def check_connectivity():
+    with ThreadPoolExecutor(max_workers=len(TARGETS)) as executor:
+        futures = [executor.submit(probe, h, p) for h, p in TARGETS]
 
         for future in as_completed(futures):
             if future.result():
-                executor.shutdown(wait=False, cancel_futures=True)
                 return True
 
-        return False
-
-    finally:
-        executor.shutdown(wait=False, cancel_futures=True)
+    return False
