@@ -55,19 +55,47 @@ def main(page: ft.Page):
         )
 
         def on_update(total, fake_ip, status):
-            if status is None:
-                terminal_view.controls.append(
-                    ft.Text(f"[{total}] {fake_ip} -> FAIL",
-                            color="#FF0000", size=9, font_family="monospace")
-                )
-            else:
-                terminal_view.controls.append(
-                    ft.Text(f"[{total}] {fake_ip} -> {status}",
-                            color="#00FF00", size=10, font_family="monospace")
-                )
-            if len(terminal_view.controls) > 200:
-                terminal_view.controls.pop(0)
-            page.update()
+            import threading
+            import time
+
+            MAX_LINES, FLUSH_INTERVAL = 200, 1.0   
+            st = on_update.__dict__                 
+
+            if "lock" not in st:
+                st["lock"] = threading.Lock()
+                st["buf"] = []         
+                st["last"] = 0.0       
+
+                def _drain():           
+                    if not st["buf"]:
+                        return
+                    terminal_view.controls.extend(st["buf"])
+                    st["buf"].clear()
+                    if len(terminal_view.controls) > MAX_LINES:
+                        del terminal_view.controls[:-MAX_LINES]
+                    st["last"] = time.monotonic()
+                    page.update()
+
+                st["drain"] = _drain
+
+                def _ticker():          
+                    while True:
+                        time.sleep(FLUSH_INTERVAL)
+                        with st["lock"]:
+                            st["drain"]()
+
+                threading.Thread(target=_ticker, daemon=True).start()
+
+            st["buf"].append(
+                ft.Text(f"[{total}] {fake_ip} -> {'FAIL' if status is None else status}",
+                        color="#FF0000" if status is None else "#00FF00",
+                        size=9 if status is None else 10,
+                        font_family="monospace")
+            )
+
+            if len(st["buf"]) >= MAX_LINES or time.monotonic() - st["last"] >= FLUSH_INTERVAL:
+                with st["lock"]:
+                    st["drain"]()
 
         def on_stats(elapsed, rps, total):
             terminal_view.controls.append(
