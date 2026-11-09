@@ -29,7 +29,7 @@ def main(page: ft.Page):
 
     
     url_entry = fsociety_input("Target URL", "https://")
-    size_entry = fsociety_input("Size (KB)", "100")
+    size_entry = fsociety_input("Size (KB)")
     ip_entry = fsociety_input("Target IP")
     number_entry = fsociety_input("Target Number")
     host_entry = fsociety_input("Target Host")
@@ -89,7 +89,7 @@ def main(page: ft.Page):
                 url_entry.value = target
             try:
                 kb_val = int(size_entry.value)
-                if kb_val > 99: kb_val = 99
+                if kb_val > 1000: kb_val = 1000
                 if kb_val <= 0: kb_val = 1
             except:
                 error_label.value = "INVALID_SIZE"
@@ -442,23 +442,23 @@ def main(page: ft.Page):
                     return
                 
                 if len(username_entry.value) < 3:
-                    error_label.value = "TOO_SHORT"
+                    error_label.value = "USERNAME_TOO_SHORT"
                     page.update()
                     return
                 
                 if len(username_entry.value) > 20:
-                    error_label.value = "TOO_LONG"
+                    error_label.value = "USERNAME_TOO_LONG"
                     page.update()
                     return
                 
 
                 if " " in username_entry.value:
-                    error_label.value = "NO_SPACES"
+                    error_label.value = "USERNAME_NO_SPACES"
                     page.update()
                     return
                 
                 if username_entry.value.isdigit():
-                    error_label.value = "NO_ONLY_NUMBERS"
+                    error_label.value = "USERNAME_NO_ONLY_NUMBERS"
                     page.update()
                     return
                 
