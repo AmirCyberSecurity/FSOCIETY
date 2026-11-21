@@ -1,12 +1,12 @@
 <h1 align="center">FSOCIETY</h1>
 
-<p align="center">
-  <img src="./image.png" width="90%">
-</p>
-
 Educational cybersecurity application built with Python and Flet. Desktop and Android (APK) support.
 
 For educational purposes only. Author not responsible for misuse.
+
+<p align="center">
+  <img src="./image.png" width="90%">
+</p>
 
 ## Installation
 
