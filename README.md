@@ -1,4 +1,8 @@
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&pause=80&color=7d0f02&center=true&vCenter=true&width=1000&lines=%24+OSINT+%2B+DDoS+FRAMEWORK;%24+FOR+EDUCATIONAL+PURPOSES+ONLY;%24+DESKTOP+%26+ANDROID;%24+ROOT+ACCESS:+GRANTED)](https://git.io/typing-svg)
+<h1 align="center">FSOCIETY</h1>
+
+<p align="center">
+  <img src="./image.png" width="90%">
+</p>
 
 Educational cybersecurity application built with Python and Flet. Desktop and Android (APK) support.
 
@@ -35,9 +39,5 @@ requests
 phonenumbers
 ```
 ## Preview
-
-<p align="center">
-  <img src="./image.png" width="100%">
-</p>
 
 **FSOCIETY** - Educational project
